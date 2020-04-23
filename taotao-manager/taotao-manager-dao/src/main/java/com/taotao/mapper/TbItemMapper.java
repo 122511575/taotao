@@ -2,6 +2,7 @@ package com.taotao.mapper;
 
 
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemCat;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -23,4 +24,5 @@ public interface TbItemMapper {
     List<TbItem> findTbItemByPage(@Param("index") int index, @Param("pageSize") int pageSize);
 
     int updateItemByIds(@Param("ids") List<Long> ids,@Param("type") int type,@Param("date") Date date);
+
 }

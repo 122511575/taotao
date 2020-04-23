@@ -5,6 +5,7 @@ import com.taotao.mapper.TbItemMapper;
 import com.taotao.pojo.LayuiResult;
 import com.taotao.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemCat;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,6 @@ public class ItemServiceImpl implements ItemService {
         }
         List<Long> ids = new ArrayList<Long>();
         for (TbItem tbItem: tbItems) {
-            System.out.println(tbItem.getId());
             ids.add(tbItem.getId());
         }
         int count = tbItemMapper.updateItemByIds(ids,type,date);
@@ -58,4 +58,5 @@ public class ItemServiceImpl implements ItemService {
         return TaotaoResult.build(500,"商品修改失败",null);
 
     }
+
 }

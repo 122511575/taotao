@@ -3,6 +3,7 @@ package com.taotao.controller;
 import com.taotao.pojo.LayuiResult;
 import com.taotao.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemCat;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,4 +59,5 @@ public class ItemController {
         TaotaoResult result = itemService.updateItem(tbItem,0,date);
         return result;
     }
+
 }
