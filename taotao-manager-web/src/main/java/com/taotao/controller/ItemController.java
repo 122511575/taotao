@@ -1,17 +1,18 @@
 package com.taotao.controller;
 
-import com.taotao.pojo.LayuiResult;
-import com.taotao.pojo.TaotaoResult;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemCat;
+import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
+import com.taotao.utils.FtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.*;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -60,4 +61,24 @@ public class ItemController {
         return result;
     }
 
+    @RequestMapping("/searchItem")
+    @ResponseBody
+    public LayuiResult searchItem(Integer page,Integer limit,String title,Integer priceMin,Integer priceMax,Long cId){
+        LayuiResult result = itemService.getLikeItem(page,limit,title,priceMin,priceMax,cId);
+        return result;
+    }
+
+    @RequestMapping("/fileUpload")
+    @ResponseBody
+    public PictureResult fileUpload(MultipartFile file){
+        String filename = file.getOriginalFilename();
+        try {
+            byte[] bytes = file.getBytes();
+            PictureResult result = itemService.addPicture(filename,bytes);
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

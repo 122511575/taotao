@@ -1,15 +1,18 @@
 package com.taotao.service.impl;
 
 import com.alibaba.druid.sql.ast.expr.SQLCaseExpr;
+import com.taotao.constant.FTPconstant;
 import com.taotao.mapper.TbItemMapper;
-import com.taotao.pojo.LayuiResult;
-import com.taotao.pojo.TaotaoResult;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemCat;
+import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
+import com.taotao.utils.FtpUtil;
+import com.taotao.utils.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -58,5 +61,51 @@ public class ItemServiceImpl implements ItemService {
         return TaotaoResult.build(500,"商品修改失败",null);
 
     }
+
+    @Override
+    public LayuiResult getLikeItem(Integer page, Integer limit, String title, Integer priceMin, Integer priceMax, Long cid) {
+        if (priceMin==null){
+            priceMin = 0;
+        }
+        if (priceMin <0 ){
+            priceMin = 0;
+        }
+        if (priceMax==null){
+            priceMax = 10000000;
+        }
+        if (priceMax>10000000){
+            priceMax = 10000000;
+        }
+        LayuiResult result = new LayuiResult();
+        result.setCode(0);
+        result.setMsg("");
+        int count = tbItemMapper.findTbItemByLikeCount(title,priceMin,priceMax,cid);
+        result.setCount(count);
+        List<TbItem> data= tbItemMapper.findTbItemLike(title,priceMin,priceMax,cid,(page-1)*limit,limit);
+        result.setData(data);
+        return result;
+    }
+
+    @Override
+    public PictureResult addPicture(String filename, byte[] bytes) {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String filePath = simpleDateFormat.format(date);
+        String fileName = IDUtils.genImageName()+filename.substring(filename.lastIndexOf(".jpeg"));
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        boolean b = FtpUtil.uploadFile(FTPconstant.FTP_ADDRESS, FTPconstant.FTP_PORT, FTPconstant.FTP_USERNAME, FTPconstant.FTP_PASSWORD, FTPconstant.FILI_UPLOAD_PATH, filePath, fileName, bis);
+        if (b == true){
+            PictureResult result = new PictureResult();
+            result.setCode(0);
+            result.setMsg("");
+            PictureData data = new PictureData();
+            data.setSrc(FTPconstant.IMAGE_BASE_URL+"/"+filePath+"/"+fileName);
+            result.setData(data);
+            System.out.println(data.getSrc());
+            return result;
+        }
+        return null;
+    }
+
 
 }
