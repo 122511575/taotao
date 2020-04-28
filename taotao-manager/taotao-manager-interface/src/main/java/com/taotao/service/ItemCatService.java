@@ -1,5 +1,6 @@
 package com.taotao.service;
 
+import com.taotao.pojo.ItemCatResult;
 import com.taotao.pojo.ZtreeResult;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface ItemCatService {
      * @return Ztree需要的json格式
      */
     List<ZtreeResult> getZtreeResult(Long id);
+
+    ItemCatResult getItemCats();
 }

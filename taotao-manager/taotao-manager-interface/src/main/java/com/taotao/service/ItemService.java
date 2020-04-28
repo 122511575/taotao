@@ -17,4 +17,6 @@ public interface ItemService {
     LayuiResult getLikeItem(Integer page, Integer limit, String title, Integer priceMin, Integer priceMax, Long cid);
 
     PictureResult addPicture(String filename, byte[] bytes);
+
+    TaotaoResult addItem(TbItem tbItem, String itemDesc);
 }

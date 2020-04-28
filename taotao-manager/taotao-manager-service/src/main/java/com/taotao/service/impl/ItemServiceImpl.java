@@ -2,6 +2,7 @@ package com.taotao.service.impl;
 
 import com.alibaba.druid.sql.ast.expr.SQLCaseExpr;
 import com.taotao.constant.FTPconstant;
+import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
 import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
@@ -22,6 +23,8 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     @Autowired
     private TbItemMapper tbItemMapper;
+    @Autowired
+    private TbItemDescMapper tbItemDescMapper;
     @Override
     public TbItem findTbItemById(long itemId) {
         TbItem tbItem = tbItemMapper.findTbItemById(itemId);
@@ -91,9 +94,10 @@ public class ItemServiceImpl implements ItemService {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String filePath = simpleDateFormat.format(date);
-        String fileName = IDUtils.genImageName()+filename.substring(filename.lastIndexOf(".jpeg"));
+        String fileName = IDUtils.genImageName()+filename.substring(filename.lastIndexOf(".jpg"));
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         boolean b = FtpUtil.uploadFile(FTPconstant.FTP_ADDRESS, FTPconstant.FTP_PORT, FTPconstant.FTP_USERNAME, FTPconstant.FTP_PASSWORD, FTPconstant.FILI_UPLOAD_PATH, filePath, fileName, bis);
+        System.out.println(b+"__________--------------------_______________---------------");
         if (b == true){
             PictureResult result = new PictureResult();
             result.setCode(0);
@@ -105,6 +109,31 @@ public class ItemServiceImpl implements ItemService {
             return result;
         }
         return null;
+    }
+
+    @Override
+    public TaotaoResult addItem(TbItem tbItem, String itemDesc) {
+        Long itemID = IDUtils.genItemId();
+        Date date = new Date();
+        tbItem.setId(itemID);
+        tbItem.setStatus((byte)1);
+        tbItem.setCreated(date);
+        tbItem.setUpdated(date);
+
+        int i = tbItemMapper.addItem(tbItem);
+        if (i<=0){
+            return TaotaoResult.build(500,"添加商品基本信息失败");
+        }
+        TbItemDesc tbItemDesc = new TbItemDesc();
+        tbItemDesc.setItemId(itemID);
+        tbItemDesc.setCreated(date);
+        tbItemDesc.setUpdated(date);
+        tbItemDesc.setItemDesc(itemDesc);
+        int j = tbItemDescMapper.addItemDesc(tbItemDesc);
+        if (j<=0){
+            return TaotaoResult.build(500,"添加商品描述信息失败");
+        }
+        return TaotaoResult.build(200,"添加商品成功");
     }
 
 
