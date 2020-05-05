@@ -1,11 +1,15 @@
 package com.taotao.content.service.impl;
 
 import com.taotao.content.service.ItemContentService;
+import com.taotao.content.service.JedisClient;
 import com.taotao.mapper.TbContentCategoryMapper;
 import com.taotao.mapper.TbContentMapper;
 import com.taotao.pojo.*;
 import com.taotao.utils.IDUtils;
+import com.taotao.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +21,10 @@ public class ItemContentServiceImpl implements ItemContentService {
     private TbContentCategoryMapper tbContentCategoryMapper;
     @Autowired
     private TbContentMapper tbContentMapper;
+    @Autowired
+    private JedisClient jedisClient;
+    @Value("AD1")
+    private String AD1;
     @Override
     public List<ZtreeResult> getZtreeResult(Long id) {
         List<ZtreeResult> result = new ArrayList<ZtreeResult>();
@@ -65,6 +73,7 @@ public class ItemContentServiceImpl implements ItemContentService {
         result.setCount(count);
         List<TbContent> data = tbContentMapper.findContentByPage(categoryId,(page-1)*limit,limit);
         result.setData(data);
+        jedisClient.del(AD1);
         return result;
     }
 
@@ -82,11 +91,18 @@ public class ItemContentServiceImpl implements ItemContentService {
         result.setCount(count);
         List<TbContent> data = tbContentMapper.findContentByPage(categoryId,(page-1)*limit,limit);
         result.setData(data);
+        jedisClient.del(AD1);
         return result;
     }
 
     @Override
     public List<Ad1Node> showAd1Node() {
+        String json = jedisClient.get(AD1);
+        if (StringUtils.isNotBlank(json)){
+            List<Ad1Node> nodes = JsonUtils.jsonToPojo(json,List.class);
+            System.out.println("从缓存");
+            return nodes;
+        }
         List<Ad1Node> nodes = new ArrayList<Ad1Node>();
         List<TbContent> contents = tbContentMapper.findContentByPage(89L,0,10);
         for (TbContent content: contents){
@@ -101,6 +117,8 @@ public class ItemContentServiceImpl implements ItemContentService {
             node.setHeightB(240);
             nodes.add(node);
         }
+        jedisClient.set(AD1,JsonUtils.objectToJson(nodes));
+        System.out.println("从数据库");
         return nodes;
     }
 }

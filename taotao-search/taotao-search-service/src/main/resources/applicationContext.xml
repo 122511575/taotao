@@ -42,7 +42,7 @@
     </bean>
 
     <!--扫描service 层的 注解-->
-    <context:component-scan base-package="com.taotao.service"></context:component-scan>
+    <context:component-scan base-package="com.taotao.search.service"></context:component-scan>
 
     <!-- 事务管理器 -->
     <bean id="transactionManager"
@@ -68,28 +68,20 @@
     <!-- 切面 -->
     <aop:config>
         <aop:advisor advice-ref="txAdvice"
-                     pointcut="execution(* com.taotao.service.*.*(..))" />
+                     pointcut="execution(* com.taotao.search.service.*.*(..))" />
     </aop:config>
-
-    <!--配置redis连接池-->
-        <!-- 配置单机版的连接 -->
-        <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
-            <constructor-arg name="host" value="192.168.25.153"></constructor-arg>
-            <constructor-arg name="port" value="6379"></constructor-arg>
-        </bean>
-
 
 
         <!-- 使用dubbo发布服务 -->
     <!-- 提供方应用信息，用于计算依赖关系 -->
-    <dubbo:application name="taotao-manager" />
+    <dubbo:application name="taotao-search" />
     <dubbo:registry protocol="zookeeper"
                     address="192.168.64.100:2181" />
     <!-- 用dubbo协议在20880端口暴露服务 -->
-    <dubbo:protocol name="dubbo" port="20880" />
-    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:protocol name="dubbo" port="20882" />
+    <!-- 声明需要暴露的服务接口
     <dubbo:service interface="com.taotao.service.ItemService" ref="itemServiceImpl" />
-    <dubbo:service interface="com.taotao.service.ItemCatService" ref="itemCatServiceImpl" />
+        -->
 
 </beans>
 

@@ -136,5 +136,12 @@ public class ItemServiceImpl implements ItemService {
         return TaotaoResult.build(200,"添加商品成功");
     }
 
+    @Override
+    public List<SearchItem> findSearchItemAll() {
+        List<SearchItem> searchItemAll = tbItemMapper.findSearchItemAll();
+
+        return searchItemAll;
+    }
+
 
 }
