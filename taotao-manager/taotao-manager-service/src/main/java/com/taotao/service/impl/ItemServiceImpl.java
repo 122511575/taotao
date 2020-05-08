@@ -35,8 +35,8 @@ public class ItemServiceImpl implements ItemService {
     private TbItemDescMapper tbItemDescMapper;
     @Autowired
     private JmsTemplate jmsTemplate;
-    @Resource(name = "topicDestination")
-    Destination destination;
+    @Autowired
+    private Destination destination;
     @Override
     public TbItem findTbItemById(long itemId) {
         TbItem tbItem = tbItemMapper.findTbItemById(itemId);

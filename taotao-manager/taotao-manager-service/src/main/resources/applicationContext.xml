@@ -78,6 +78,14 @@
             <constructor-arg name="port" value="6379"></constructor-arg>
         </bean>
 
+        <!-- 配置生产者 -->
+        <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
+        <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+            <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+            <property name="connectionFactory" ref="connectionFactory" />
+        </bean>
+
+
         <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 -->
         <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
             <property name="brokerURL" value="tcp://192.168.64.100:61616" />
