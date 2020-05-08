@@ -74,8 +74,33 @@
     <!--配置redis连接池-->
         <!-- 配置单机版的连接 -->
         <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
-            <constructor-arg name="host" value="192.168.25.153"></constructor-arg>
+            <constructor-arg name="host" value="192.168.64.100"></constructor-arg>
             <constructor-arg name="port" value="6379"></constructor-arg>
+        </bean>
+
+        <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 -->
+        <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+            <property name="brokerURL" value="tcp://192.168.64.100:61616" />
+        </bean>
+
+        <!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->
+        <bean id="connectionFactory"
+              class="org.springframework.jms.connection.SingleConnectionFactory">
+            <!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->
+            <property name="targetConnectionFactory" ref="targetConnectionFactory" />
+        </bean>
+
+        <!--这个是队列目的地，点对点的
+        <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+            <constructor-arg>
+                <value>spring-queue</value>
+            </constructor-arg>
+        </bean>
+        -->
+
+        <!--这个是主题目的地，一对多的 -->
+        <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+            <constructor-arg value="addItem" />
         </bean>
 
 

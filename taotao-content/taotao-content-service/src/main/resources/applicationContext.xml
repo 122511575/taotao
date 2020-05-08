@@ -74,7 +74,7 @@
         <!--配置redis连接池-->
         <!-- 配置单机版的连接 -->
         <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
-            <constructor-arg name="host" value="192.168.25.153"></constructor-arg>
+            <constructor-arg name="host" value="192.168.64.100"></constructor-arg>
             <constructor-arg name="port" value="6379"></constructor-arg>
         </bean>
 

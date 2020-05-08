@@ -9,9 +9,17 @@ import com.taotao.service.ItemService;
 import com.taotao.utils.FtpUtil;
 import com.taotao.utils.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.print.attribute.standard.Destination;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +33,10 @@ public class ItemServiceImpl implements ItemService {
     private TbItemMapper tbItemMapper;
     @Autowired
     private TbItemDescMapper tbItemDescMapper;
+    @Autowired
+    private JmsTemplate jmsTemplate;
+    @Resource(name = "topicDestination")
+    Destination destination;
     @Override
     public TbItem findTbItemById(long itemId) {
         TbItem tbItem = tbItemMapper.findTbItemById(itemId);
@@ -97,7 +109,6 @@ public class ItemServiceImpl implements ItemService {
         String fileName = IDUtils.genImageName()+filename.substring(filename.lastIndexOf(".jpg"));
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         boolean b = FtpUtil.uploadFile(FTPconstant.FTP_ADDRESS, FTPconstant.FTP_PORT, FTPconstant.FTP_USERNAME, FTPconstant.FTP_PASSWORD, FTPconstant.FILI_UPLOAD_PATH, filePath, fileName, bis);
-        System.out.println(b+"__________--------------------_______________---------------");
         if (b == true){
             PictureResult result = new PictureResult();
             result.setCode(0);
@@ -112,8 +123,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public TaotaoResult addItem(TbItem tbItem, String itemDesc) {
-        Long itemID = IDUtils.genItemId();
+    public TaotaoResult addItem(final TbItem tbItem, String itemDesc) {
+        final Long itemID = IDUtils.genItemId();
         Date date = new Date();
         tbItem.setId(itemID);
         tbItem.setStatus((byte)1);
@@ -133,15 +144,15 @@ public class ItemServiceImpl implements ItemService {
         if (j<=0){
             return TaotaoResult.build(500,"添加商品描述信息失败");
         }
+        jmsTemplate.send(String.valueOf(destination), new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                TextMessage textMessage = session.createTextMessage();
+                textMessage.setText(itemID+"");
+                return textMessage;
+            }
+        });
+
         return TaotaoResult.build(200,"添加商品成功");
     }
-
-    @Override
-    public List<SearchItem> findSearchItemAll() {
-        List<SearchItem> searchItemAll = tbItemMapper.findSearchItemAll();
-
-        return searchItemAll;
-    }
-
-
 }

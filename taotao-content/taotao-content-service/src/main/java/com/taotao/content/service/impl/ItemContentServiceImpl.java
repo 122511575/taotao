@@ -5,7 +5,6 @@ import com.taotao.content.service.JedisClient;
 import com.taotao.mapper.TbContentCategoryMapper;
 import com.taotao.mapper.TbContentMapper;
 import com.taotao.pojo.*;
-import com.taotao.utils.IDUtils;
 import com.taotao.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

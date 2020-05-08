@@ -43,7 +43,7 @@
             a.sellPoint,
             a.price,
             a.image,
-            b.'name' categoryName,
+            b.name categoryName,
             c.itemDesc
         FROM
             tbitem a
