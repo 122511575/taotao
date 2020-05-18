@@ -5,10 +5,7 @@ import com.taotao.service.ItemService;
 import com.taotao.utils.FtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.*;
@@ -84,8 +81,8 @@ public class ItemController {
 
     @RequestMapping("/addItem")
     @ResponseBody
-    public TaotaoResult addItem(TbItem tbItem,String itemDesc){
-        TaotaoResult result = itemService.addItem(tbItem,itemDesc);
+    public TaotaoResult addItem(TbItem tbItem, String itemDesc, @RequestParam(value="paramKeyIds[]",required = false) List<Integer> paramKeyIds, @RequestParam(value="paramValue[]",required = false) List<String> paramValue){
+        TaotaoResult result = itemService.addItem(tbItem,itemDesc,paramKeyIds,paramValue);
         return result;
     }
 

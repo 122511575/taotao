@@ -34,16 +34,6 @@
     <property name="suffix" value=".jsp" />
 </bean>
 
-    <!-- 文件上传 -->
-    <!--<bean id="multipartResolver"-->
-          <!--class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
-        <!--&lt;!&ndash; 设置上传文件的最大尺寸为5MB &ndash;&gt;-->
-        <!--<property name="maxUploadSize">-->
-            <!--<value>5242880</value>-->
-        <!--</property>-->
-    <!--</bean>-->
-
-
     <!-- 引用dubbo服务 -->
     <dubbo:application name="taotao-portal-web"/>
     <dubbo:registry protocol="zookeeper" address="192.168.64.100:2181"/>

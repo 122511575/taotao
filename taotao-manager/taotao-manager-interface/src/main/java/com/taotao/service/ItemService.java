@@ -1,7 +1,6 @@
 package com.taotao.service;
 
 import com.taotao.pojo.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +17,9 @@ public interface ItemService {
 
     PictureResult addPicture(String filename, byte[] bytes);
 
-    TaotaoResult addItem(TbItem tbItem, String itemDesc);
+    TaotaoResult addItem(TbItem tbItem, String itemDesc, List<Integer> paramKeyIds, List<String> paramValue);
 
+    TbItemDesc findTbItemDescByItemId(Long itemId);
+
+    List<TbItemParamGroup> findTbItemGroupByItemId(Long itemId);
 }
