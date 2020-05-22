@@ -70,7 +70,12 @@
         <aop:advisor advice-ref="txAdvice"
                      pointcut="execution(* com.taotao.order.service.*.*(..))" />
     </aop:config>
-
+        <!--配置redis连接池-->
+        <!-- 配置单机版的连接 -->
+        <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+            <constructor-arg name="host" value="192.168.64.100"></constructor-arg>
+            <constructor-arg name="port" value="6379"></constructor-arg>
+        </bean>
 
         <!-- 使用dubbo发布服务 -->
     <!-- 提供方应用信息，用于计算依赖关系 -->
@@ -80,6 +85,6 @@
     <!-- 用dubbo协议在20880端口暴露服务 -->
     <dubbo:protocol name="dubbo" port="20884" />
     <!-- 声明需要暴露的服务接口 -->
-    <!--<dubbo:service interface="com.taotao.service.ItemGroupService" ref="itemGroupServiceImpl" timeout="600000"/>-->
-</beans>
+        <dubbo:service interface="com.taotao.order.service.OrderService" ref="orderServiceImpl" timeout="600000"/>
+    </beans>
 

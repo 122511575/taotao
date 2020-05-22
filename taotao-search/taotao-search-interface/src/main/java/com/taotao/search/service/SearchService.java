@@ -7,7 +7,7 @@ import com.taotao.pojo.TaotaoResult;
 public interface SearchService {
     TaotaoResult importSolr();
 
-    SearchResult findItemSearch(String query, Integer page);
+    SearchResult findItemSearch(String str, Integer page);
 
     void addSearchItem(SearchItem item);
 }

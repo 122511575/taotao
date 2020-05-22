@@ -16,7 +16,6 @@ public class OrderServiceImpl implements OrderService {
     private TbOrderMapper tbOrderMapper;
     @Autowired
     private JedisClient jedisClient;
-
     @Override
     public TaotaoResult addOrder(List<TbOrderItem> orderItemList, TbOrderShipping tbOrderShipping, String payment, Integer paymentType, TbUser tbUser) {
         TbOrder tbOrder = new TbOrder();

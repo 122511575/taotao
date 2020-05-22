@@ -2,10 +2,8 @@ package com.taotao.service;
 
 
 import com.taotao.mapper.TbItemCatMapper;
-import com.taotao.pojo.ItemCat;
-import com.taotao.pojo.ItemCatResult;
-import com.taotao.pojo.TbItemCat;
-import com.taotao.pojo.ZtreeResult;
+import com.taotao.mapper.TbItemMapper;
+import com.taotao.pojo.*;
 import com.taotao.service.ItemCatService;
 import com.taotao.service.JedisClient;
 import com.taotao.utils.JsonUtils;
@@ -55,6 +53,26 @@ public class ItemCatServiceImpl implements ItemCatService {
         System.out.println("使用数据库");
         return result;
     }
+
+    @Override
+    public List<StatisticsResult> getStatisticList() {
+        List<StatisticsResult> statisticsResultList = new ArrayList<StatisticsResult>();
+
+        List<TbItemCat> tbItemCatList = tbItemCatMapper.findTbItemCatByIsParentId(0);
+        for(TbItemCat tbItemCat : tbItemCatList){
+            int value = tbItemCatMapper.fingTbItemByCId(tbItemCat.getId());
+            if(value <= 0){
+                continue;
+            }
+            String name = tbItemCat.getName();
+            StatisticsResult statisticsResult = new StatisticsResult();
+            statisticsResult.setValue(value);
+            statisticsResult.setName(name);
+            statisticsResultList.add(statisticsResult);
+        }
+        return statisticsResultList;
+    }
+
     private List getItemCatList(Long parentId){
         int count = 0;
         List list = new ArrayList();

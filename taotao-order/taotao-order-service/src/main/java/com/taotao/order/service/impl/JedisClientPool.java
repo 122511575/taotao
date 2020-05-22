@@ -1,7 +1,6 @@
 package com.taotao.order.service.impl;
 
-
-import com.taotao.sso.service.JedisClient;
+import com.taotao.order.service.JedisClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -11,7 +10,6 @@ import redis.clients.jedis.JedisPool;
 public class JedisClientPool implements JedisClient {
     @Autowired
     private JedisPool jedisPool;
-
     @Override
     public String set(String key, String value) {
         Jedis jedis = jedisPool.getResource();
@@ -83,12 +81,12 @@ public class JedisClientPool implements JedisClient {
         jedis.close();
         return result;
     }
+
     @Override
-    public Long del(String key){
+    public Long del(String key) {
         Jedis jedis = jedisPool.getResource();
         Long result = jedis.del(key);
         jedis.close();
         return result;
     }
-
 }

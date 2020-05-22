@@ -37,4 +37,5 @@ public interface TbItemMapper {
     List<SearchItem> findSearchItemAll();
 
     SearchItem findSearchItemById(@Param("id") Long itemId);
+
 }

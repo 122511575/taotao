@@ -2,6 +2,7 @@ package com.taotao.order.interceptor;
 
 import com.taotao.constant.RedisConstant;
 import com.taotao.pojo.TaotaoResult;
+import com.taotao.pojo.TbUser;
 import com.taotao.sso.service.UserService;
 import com.taotao.utils.CookieUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,8 @@ public class LoginInterceptor implements HandlerInterceptor{
             httpServletResponse.sendRedirect(RedisConstant.SSO_LOGIN_URL+"?redirectUrl="+url);
             return false;
         }
+        TbUser tbUser = (TbUser) result.getData();
+        httpServletRequest.setAttribute("user",tbUser);
 
         return true;
     }

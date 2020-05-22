@@ -235,6 +235,11 @@
                 <artifactId>freemarker</artifactId>
                 <version>${freemarker.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>3.7.26.ALL</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

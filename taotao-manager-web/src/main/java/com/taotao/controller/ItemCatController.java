@@ -1,5 +1,6 @@
 package com.taotao.controller;
 
+import com.taotao.pojo.StatisticsResult;
 import com.taotao.pojo.ZtreeResult;
 import com.taotao.service.ItemCatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,11 @@ public class ItemCatController {
     public List<ZtreeResult> showZtree(@RequestParam(value = "id",defaultValue = "0") Long id){
         List<ZtreeResult> result = itemCatService.getZtreeResult(id);
         return result;
+    }
+    @RequestMapping("/statisticsItem")
+    @ResponseBody
+    public List<StatisticsResult> statisticsItem(){
+        List<StatisticsResult> results = itemCatService.getStatisticList();
+        return results;
     }
 }
